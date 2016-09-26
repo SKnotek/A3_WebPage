@@ -1,0 +1,9 @@
+﻿.SizeLarge{
+	font-size: 60px;
+}
+
+.SizeAndPadding{
+	font-size: large;
+	text-align: end;
+	padding: 0px 60px 0px 0px;
+}
