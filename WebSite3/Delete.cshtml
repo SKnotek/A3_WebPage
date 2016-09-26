@@ -1,0 +1,67 @@
+﻿@{
+	var title = Context.GetRouteValue("DeleteTitle");
+	if (!string.IsNullOrWhiteSpace(title))
+	{
+		try
+		{
+			var db = Database.Open("Album");
+
+			var SQLDelete = "DELETE FROM Album WHERE Title=@0";
+			db.Execute(SQLDelete, title);
+
+		}
+		catch (Exception error)
+		{
+			Response.Write(error.Message);
+		}
+	}
+	else
+	{
+		var db = Database.Open("Album");
+
+		var SQLRead = "Select * FROM Album";
+		var data = db.Query(SQLRead);
+		var artistTitle = "";
+
+		<script type="text/javascript">
+			function artistChange(){
+				//Setup of the elements in HTML using javascript
+				var e = document.getElementById("Title");
+				var option = document.createElement("option");
+				var select = document.createElement("select");
+
+				//The C# data from the HTML to data params
+				artistTitle = e.options[e.selectedIndex].text;
+				data = data.Where( p => p.Title == artistTitle);
+
+				//Removing the elements in the select box
+				while(e.length != 0)
+				{
+					e.remove(e.length - 1);
+				}
+				//Adding new collection
+				e.appendChild(function(){
+					@foreach(var item in data)
+					{
+						var tempString = string.Format("<option value={0}>{0}</option>", item.Title);
+						Html.Raw(tempString);
+					}
+				});
+
+			}
+		</script>
+	
+		<select id="Artist" onchange="artistChange()">
+		<option>...</option>
+		@foreach (var item in data)
+		{
+			<option value="@item.Artist">@item.Artist</option>
+		}
+		</select>
+		<select id="Title">
+			<option>...</option>
+		</select>	
+		
+	}
+
+}

@@ -1,0 +1,34 @@
+﻿@{
+	<link rel="stylesheet" href="~/Shared/Styles.css" type="text/css" />
+	var db = Database.Open("Album");
+
+	var title = Context.GetRouteValue("Title");
+	if (string.IsNullOrEmpty(title))
+	{
+		Response.Redirect("~/");
+	}
+	else
+	{
+		try
+		{
+			var SQLPull = "SELECT * FROM Album WHERE Title=@0";
+			var data = db.QuerySingle(SQLPull, title);
+			var artist = data.Artist;
+			var artistBio = data.ArtistBio;
+			Page.Title = data.Artist;
+
+			<hgroup>
+				<h1 class="SizeLarge"><em>@title</em></h1>
+				<h2 class="SizeAndPadding">by @artist</h2>
+			</hgroup>
+			<span>@Html.Raw(artistBio)</span>
+			<span><input type="submit" value="Delete Entry" onclick="window.location = '/album_entry/@title;'" /></span>
+		}
+		catch (Exception error)
+		{
+			Response.Write(error.Message);
+		}
+	}
+
+
+}
